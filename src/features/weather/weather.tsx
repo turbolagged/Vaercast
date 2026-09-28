@@ -24,9 +24,13 @@ export default function Weather() {
         return () => contrtoller.abort();
     }, [])
 
-    return <div>
-        <h4>Dhaka Weather </h4>
-        <h5>Current Temperature: {temperature?.temp_C}°C</h5>
-        <h5>FeelsLike: {temperature?.FeelsLikeC}°C</h5>
-    </div>
+    return (
+        <div className="flex items-center justify-center bg-page min-h-screen">
+            <div className="w-full max-w-sm rounded-2xl bg-card shadow-md p-6 ring-1 ring-line">
+                <h4 className="text-lg font-semibold text-emerslateld-700">Dhaka Weather</h4>
+                <p className="mt-4 text-5xl font-bold text-main"> {temperature?.temp_C ?? '--'}°C</p>
+                <p className="mt-2 text-sm text-muted">Feels Like {temperature?.FeelsLikeC ?? '--'}°C</p>
+            </div>
+        </div>
+    )
 }
