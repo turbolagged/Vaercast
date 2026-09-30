@@ -1,75 +1,47 @@
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+# BD Weather
+ 
+A weather app for Bangladesh's divisions, built while transitioning from Angular to React/Next.js. Pick a district, see the current temperature and conditions.
+ 
+**Live demo:** https://bdweatherlive.vercel.app/
+ 
+## Stack
+ 
+- **React + TypeScript** (Vite)
+- **SWR** for data fetching, caching, and revalidation
+- **Tailwind CSS** for styling
+- **wttr.in** as the weather API (no key required)
+## Features
+ 
+- District dropdown driven by a typed data array, covering all 8 divisions of Bangladesh
+- Server state handled with SWR: automatic caching by city, loading and error states, no manual fetch/cleanup code
+- Fully typed API response shape end to end (fetcher → SWR generic → JSX)
+- Soft, muted color theme defined once as CSS variables and reused via Tailwind utility classes
+## Getting started
+ 
+```bash
+git clone https://github.com/turbolagged/bd-weather.git
+cd bd-weather
+npm install
+npm run dev
 ```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+ 
+Create a `.env` file in the project root with:
+ 
 ```
+VITE_WEATHER_API_URL=https://wttr.in
+```
+ 
+## What this project was for
+ 
+I'm a frontend engineer with a background in Angular, building this to get hands-on with React, hooks, and the modern data-fetching/state ecosystem (SWR, and Zustand next) ahead of moving into React/Next.js roles. The early commits deliberately start with a plain `useEffect` + `AbortController` implementation before moving to SWR, to understand what the library actually replaces rather than treating it as a black box.
+ 
+## Roadmap
+ 
+- [ ] Zustand store for recent/saved city searches
+- [ ] 3-day forecast view
+- [ ] Searchable district input
+- [ ] Unit tests with Jest / React Testing Library
+- [ ] Migrate to Next.js App Router
+## License
+ 
+MIT
