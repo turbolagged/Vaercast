@@ -44,7 +44,6 @@ export default function Weather() {
               </p>
             </>
           )}
-          <CitySelect city={""} setCity={setCity} />
         </div>
       </div>
     </>
