@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import type { WeatherResponse } from "./types";
 import { weatherUrl, fetcher } from "./api";
-import CitySelect from "./components/City-select";
+// import CitySelect from "./components/City-select";
 import useSWR from "swr";
 
 interface CitySelectProps {
