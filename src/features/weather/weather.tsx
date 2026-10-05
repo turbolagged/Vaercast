@@ -1,8 +1,9 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import type { WeatherResponse } from "./types";
 import { weatherUrl, fetcher } from "./api";
 // import CitySelect from "./components/City-select";
 import useSWR from "swr";
+import useDebounce from "../../hooks/useDebounce";
 
 interface CitySelectProps {
   city?: string;
@@ -71,16 +72,4 @@ function SearchLocation({ setCity }: CitySelectProps) {
       />
     </div>
   );
-}
-
-function useDebounce<T>(value: T, delay = 500): T {
-  const [debounced, setDebounced] = useState(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebounced(value);
-    }, delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-  return debounced;
 }
