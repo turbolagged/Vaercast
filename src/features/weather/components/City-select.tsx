@@ -59,6 +59,10 @@ export default function SearchLocation() {
 
   let { data, error, isLoading } = getSearchResults(debouncedValue);
 
+  const handleLocationSelect = (value: any) => {
+    console.log(value);
+  };
+
   return (
     <>
       <div className="flex justify-center items-center w-full">
@@ -73,7 +77,9 @@ export default function SearchLocation() {
         <ul>
           {data &&
             data.results.map((result: any) => (
-              <li key={result.id}>{result?.name}</li>
+              <li key={result.id} onClick={() => handleLocationSelect(result)}>
+                {result?.name}
+              </li>
             ))}
         </ul>
       </div>
