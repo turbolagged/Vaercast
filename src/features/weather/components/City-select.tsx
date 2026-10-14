@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type ReactHTMLElement } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import useSWR from "swr";
-import { weatherUrl, fetcher } from "../api";
+import { geocodeUrl, forecastUrl, fetcher } from "../api";
 
 // interface CitySelectProps {
 //   city: string;
@@ -38,7 +38,7 @@ import { weatherUrl, fetcher } from "../api";
 function getSearchResults(location: string) {
   // if (!location) return;
   const { data, error, isLoading } = useSWR(
-    location ? weatherUrl(location) : null,
+    location ? geocodeUrl(location) : null,
     fetcher,
   );
 
@@ -50,17 +50,34 @@ function getSearchResults(location: string) {
 
 export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
+  const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
+  // const [forecastDetails, setforecastData] = useState<any>(null);
+  const [selectedLocation, setSelectedLocation] = useState<any>(null);
   const debouncedValue = useDebounce(searchValue, 500);
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     // console.log(event.target.value);
     setSearchValue(event.target.value);
+    setShowSearchResults(true);
   };
 
   let { data, error, isLoading } = getSearchResults(debouncedValue);
 
+  let { forecastData } = getforecastForSelectedLocation(
+    selectedLocation?.latitude,
+    selectedLocation?.longitude,
+  );
+
   const handleLocationSelect = (value: any) => {
     console.log(value);
+    setShowSearchResults(false);
+    setSelectedLocation(value);
+
+    // const { forecastData, error, isLoading } = getforecastForSelectedLocation(
+    //   value?.latitude,
+    //   value?.longitude,
+    // );
+    // setforecastData(forecastData?.current);
   };
 
   return (
@@ -75,14 +92,39 @@ export default function SearchLocation() {
       </div>
       <div>
         <ul>
-          {data &&
-            data.results.map((result: any) => (
-              <li key={result.id} onClick={() => handleLocationSelect(result)}>
-                {result?.name}
+          {showSearchResults &&
+            data?.results?.map((result: any) => (
+              <li
+                key={result.id}
+                onClick={() => handleLocationSelect(result)}
+                className="cursor-pointer"
+              >
+                {result?.name}, {result?.admin1}, {result?.country_code}
               </li>
             ))}
         </ul>
+        <div>
+          {forecastData?.current && (
+            <p>Current Temp: {forecastData.current?.temperature_2m}C</p>
+          )}
+        </div>
       </div>
     </>
   );
+}
+
+function getforecastForSelectedLocation(latitude: number, longitude: number) {
+  const {
+    data: forecastData,
+    error: forecastDataError,
+    isLoading: forecastLoading,
+  } = useSWR(
+    latitude & longitude ? forecastUrl(latitude, longitude) : null,
+    fetcher,
+  );
+
+  // if (error) return {};
+  // if (isLoading) return {};
+  // return data;
+  return { forecastData, forecastDataError, forecastLoading };
 }

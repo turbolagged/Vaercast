@@ -1,15 +1,15 @@
 import { useState, type ChangeEvent } from "react";
-import type { WeatherResponse } from "./types";
-import { weatherUrl, fetcher } from "./api";
+// import type { WeatherResponse } from "./types";
+// import { weatherUrl, fetcher } from "./api";
 // import CitySelect from "./components/City-select";
-import useSWR from "swr";
+// import useSWR from "swr";
 import useDebounce from "../../hooks/useDebounce";
 import SearchLocation from "./components/City-select";
 
-interface CitySelectProps {
-  city?: string;
-  setCity: (city: string) => void;
-}
+// interface CitySelectProps {
+//   city?: string;
+//   setCity: (city: string) => void;
+// }
 
 // type tempInfo = Pick<CurrentCondition, 'temp_C' | 'FeelsLikeC'>
 
