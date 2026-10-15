@@ -51,8 +51,8 @@ function getSearchResults(location: string) {
 export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
-  // const [forecastDetails, setforecastData] = useState<any>(null);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  // const [dailyMean, setDailyMean] = useState<any>(null);
   const debouncedValue = useDebounce(searchValue, 500);
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -66,18 +66,22 @@ export default function SearchLocation() {
   let { forecastData } = getforecastForSelectedLocation(
     selectedLocation?.latitude,
     selectedLocation?.longitude,
+    selectedLocation?.timezone,
+  );
+
+  const dailyMeanData = forecastData?.daily?.time.map(
+    (day: string, index: number) => {
+      return {
+        date: day,
+        meanTemp: forecastData.daily.temperature_2m_mean[index],
+      };
+    },
   );
 
   const handleLocationSelect = (value: any) => {
     console.log(value);
     setShowSearchResults(false);
     setSelectedLocation(value);
-
-    // const { forecastData, error, isLoading } = getforecastForSelectedLocation(
-    //   value?.latitude,
-    //   value?.longitude,
-    // );
-    // setforecastData(forecastData?.current);
   };
 
   return (
@@ -108,18 +112,32 @@ export default function SearchLocation() {
             <p>Current Temp: {forecastData.current?.temperature_2m}C</p>
           )}
         </div>
+
+        <div className="mt-2">
+          <strong>Daily Average</strong>
+          {dailyMeanData?.length > 0 &&
+            dailyMeanData.map((item: any) => (
+              <p key={item.date}>
+                {item.date} : {item.meanTemp}C
+              </p>
+            ))}
+        </div>
       </div>
     </>
   );
 }
 
-function getforecastForSelectedLocation(latitude: number, longitude: number) {
+function getforecastForSelectedLocation(
+  latitude: number,
+  longitude: number,
+  timezone: string,
+) {
   const {
     data: forecastData,
     error: forecastDataError,
     isLoading: forecastLoading,
   } = useSWR(
-    latitude & longitude ? forecastUrl(latitude, longitude) : null,
+    latitude & longitude ? forecastUrl(latitude, longitude, timezone) : null,
     fetcher,
   );
 
