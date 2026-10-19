@@ -1,4 +1,9 @@
-import { useState, type ChangeEvent } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import {
   Link,
   NavLink,
@@ -17,17 +22,28 @@ import {
 // import Settings from "./components/Settings";
 
 export type TemperatureUnit = "celsius" | "fahrenheit";
-export interface WeatherContext {
+export type WindSpeedUnit = "kmh" | "ms" | "mph" | "kn";
+export type PrecipitationUnit = "mm" | "inch";
+
+export type Settings = {
   temperatureUnit: TemperatureUnit;
-  setTemperatureUnit: (value: TemperatureUnit) => void;
+  windSpeedUnit: WindSpeedUnit;
+  precipitationUnit: PrecipitationUnit;
+};
+
+const DEFAULT_SETTINGS: Settings = {
+  temperatureUnit: "celsius",
+  windSpeedUnit: "kmh",
+  precipitationUnit: "mm",
+};
+
+export interface WeatherContext {
+  settings: Settings;
+  setSettings: Dispatch<SetStateAction<Settings>>;
 }
 
 export default function Weather() {
-  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>(() =>
-    localStorage.getItem("temp_unit") === "fahrenheit"
-      ? "fahrenheit"
-      : "celsius",
-  );
+  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
 
   // const setTempUnit = (value: TemperatureUnit) => {
   //   setTemperatureUnit(value);
@@ -35,14 +51,12 @@ export default function Weather() {
 
   const onSettings = useLocation().pathname === "/settings";
 
+  // const updateSettings = (key: string, value: string)
+
   return (
     <>
       <main className="pt-10">
-        <Outlet
-          context={
-            { temperatureUnit, setTemperatureUnit } satisfies WeatherContext
-          }
-        />
+        <Outlet context={{ settings, setSettings } satisfies WeatherContext} />
       </main>
 
       <nav className="fixed bottom-0">

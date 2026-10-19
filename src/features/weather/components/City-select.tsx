@@ -60,7 +60,7 @@ export default function SearchLocation() {
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
-  const { temperatureUnit } = useOutletContext<WeatherContext>();
+  const { settings } = useOutletContext<WeatherContext>();
 
   // const [dailyMean, setDailyMean] = useState<any>(null);
   const debouncedValue = useDebounce(searchValue, 500);
@@ -85,7 +85,8 @@ export default function SearchLocation() {
     selectedLocation?.latitude,
     selectedLocation?.longitude,
     selectedLocation?.timezone,
-    tempUnit,
+    settings.temperatureUnit,
+    settings.windSpeedUnit,
   );
 
   const dailyMeanData = forecastData?.daily?.time.map(
@@ -128,10 +129,17 @@ export default function SearchLocation() {
         </ul>
         <div>
           {forecastData?.current && (
-            <p>
-              Current Temp: {forecastData.current?.temperature_2m}{" "}
-              {currentTempUnit(temperatureUnit)}
-            </p>
+            <div>
+              <p>
+                Current Temp: {forecastData.current?.temperature_2m}{" "}
+                {currentTempUnit(settings.temperatureUnit)}
+              </p>
+
+              <strong>
+                Current Wind Speed: {forecastData?.current?.wind_speed_10m}{" "}
+                {settings.windSpeedUnit}
+              </strong>
+            </div>
           )}
         </div>
 
@@ -141,7 +149,7 @@ export default function SearchLocation() {
             dailyMeanData.map((item: any) => (
               <p key={item.date}>
                 {item.date} : {item.meanTemp}
-                {currentTempUnit(temperatureUnit)}
+                {currentTempUnit(settings.temperatureUnit)}
               </p>
             ))}
         </div>
@@ -155,6 +163,7 @@ function getforecastForSelectedLocation(
   longitude: number,
   timezone: string,
   tempUnit: any,
+  windUnit: string,
 ) {
   const {
     data: forecastData,
@@ -162,7 +171,7 @@ function getforecastForSelectedLocation(
     isLoading: forecastLoading,
   } = useSWR(
     latitude & longitude
-      ? forecastUrl(latitude, longitude, timezone, tempUnit)
+      ? forecastUrl(latitude, longitude, timezone, tempUnit, windUnit)
       : null,
     fetcher,
   );
