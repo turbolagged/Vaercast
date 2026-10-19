@@ -1,20 +1,15 @@
-import { Link, Route, Routes } from "react-router";
-// import Weather from "./features/weather/weather";
+import { Routes, Route } from "react-router";
 import SearchLocation from "./features/weather/components/City-select";
 import Settings from "./features/weather/components/Settings";
-export default function App() {
-  // return <Weather />;
-  return (
-    <>
-      <nav>
-        <Link to="/">Weather</Link>
-        <Link to="/settings">Settings</Link>
-      </nav>
+import Weather from "./features/weather/weather";
 
-      <Routes>
+export default function App() {
+  return (
+    <Routes>
+      <Route element={<Weather />}>
         <Route path="/" element={<SearchLocation />} />
         <Route path="/settings" element={<Settings />} />
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
 }

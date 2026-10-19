@@ -2,6 +2,8 @@ import { useState, type ChangeEvent, type ReactHTMLElement } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import useSWR from "swr";
 import { geocodeUrl, forecastUrl, fetcher } from "../api";
+import { useOutletContext } from "react-router";
+import type { TemperatureUnit, WeatherContext } from "../weather";
 
 // interface CitySelectProps {
 //   city: string;
@@ -48,17 +50,33 @@ function getSearchResults(location: string) {
   return { data, error, isLoading };
 }
 
+function currentTempUnit(tempUnit: TemperatureUnit) {
+  if (!tempUnit) return "C";
+  return tempUnit === "celsius" ? "C" : "F";
+}
+
 export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
+
+  const { temperatureUnit } = useOutletContext<WeatherContext>();
+
   // const [dailyMean, setDailyMean] = useState<any>(null);
   const debouncedValue = useDebounce(searchValue, 500);
 
+  const tempUnit = localStorage.getItem("temp_unit")
+    ? localStorage.getItem("temp_unit")
+    : "celsius";
+
+  console.log(tempUnit + "in city");
+  // debugger;
+
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     // console.log(event.target.value);
-    setSearchValue(event.target.value);
     setShowSearchResults(true);
+    setSelectedLocation(null);
+    setSearchValue(event.target.value);
   };
 
   let { data, error, isLoading } = getSearchResults(debouncedValue);
@@ -67,6 +85,7 @@ export default function SearchLocation() {
     selectedLocation?.latitude,
     selectedLocation?.longitude,
     selectedLocation?.timezone,
+    tempUnit,
   );
 
   const dailyMeanData = forecastData?.daily?.time.map(
@@ -109,7 +128,10 @@ export default function SearchLocation() {
         </ul>
         <div>
           {forecastData?.current && (
-            <p>Current Temp: {forecastData.current?.temperature_2m}C</p>
+            <p>
+              Current Temp: {forecastData.current?.temperature_2m}{" "}
+              {currentTempUnit(temperatureUnit)}
+            </p>
           )}
         </div>
 
@@ -118,7 +140,8 @@ export default function SearchLocation() {
           {dailyMeanData?.length > 0 &&
             dailyMeanData.map((item: any) => (
               <p key={item.date}>
-                {item.date} : {item.meanTemp}C
+                {item.date} : {item.meanTemp}
+                {currentTempUnit(temperatureUnit)}
               </p>
             ))}
         </div>
@@ -131,13 +154,16 @@ function getforecastForSelectedLocation(
   latitude: number,
   longitude: number,
   timezone: string,
+  tempUnit: any,
 ) {
   const {
     data: forecastData,
     error: forecastDataError,
     isLoading: forecastLoading,
   } = useSWR(
-    latitude & longitude ? forecastUrl(latitude, longitude, timezone) : null,
+    latitude & longitude
+      ? forecastUrl(latitude, longitude, timezone, tempUnit)
+      : null,
     fetcher,
   );
 
