@@ -4,6 +4,8 @@ import useSWR from "swr";
 import { geocodeUrl, forecastUrl, fetcher } from "../api";
 import { useOutletContext } from "react-router";
 import type { TemperatureUnit, WeatherContext } from "../weather";
+import UseGeolocation from "./geolocation";
+import type { Coords } from "../types";
 
 // interface CitySelectProps {
 //   city: string;
@@ -59,6 +61,7 @@ export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [coords, setCoords] = useState<Coords | null>(null);
 
   const { settings } = useOutletContext<WeatherContext>();
 
@@ -98,6 +101,11 @@ export default function SearchLocation() {
     },
   );
 
+  const updateCoords = (c: Coords) => {
+    // setCoords(c);
+    setSelectedLocation(c);
+  };
+
   const handleLocationSelect = (value: any) => {
     console.log(value);
     setShowSearchResults(false);
@@ -106,13 +114,15 @@ export default function SearchLocation() {
 
   return (
     <>
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-around items-center w-full">
         <input
           type="text"
           onChange={handleSearchInput}
           placeholder="Search place"
           className="border border-gray-400 p-1 w-[80%] max-w-sm"
         />
+
+        <UseGeolocation onLocation={(c: Coords) => updateCoords(c)} />
       </div>
       <div>
         <ul>

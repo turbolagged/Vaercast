@@ -44,6 +44,7 @@ export interface WeatherContext {
 
 export default function Weather() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  // const [geolocation, setGeolocation] = useState
 
   // const setTempUnit = (value: TemperatureUnit) => {
   //   setTemperatureUnit(value);
