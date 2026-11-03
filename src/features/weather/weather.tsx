@@ -1,25 +1,5 @@
-import {
-  useState,
-  type ChangeEvent,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
-import {
-  Link,
-  NavLink,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router";
-// import Weather from "./features/weather/weather";
-// import type { WeatherResponse } from "./types";
-// import { weatherUrl, fetcher } from "./api";
-// import CitySelect from "./components/City-select";
-// import useSWR from "swr";
-// import useDebounce from "../../hooks/useDebounce";
-// import SearchLocation from "./components/City-select";
-// import Settings from "./components/Settings";
+import { useState, type Dispatch, type SetStateAction } from "react";
+import { NavLink, Outlet, useLocation } from "react-router";
 
 export type TemperatureUnit = "celsius" | "fahrenheit";
 export type WindSpeedUnit = "kmh" | "ms" | "mph" | "kn";
@@ -46,13 +26,7 @@ export default function Weather() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   // const [geolocation, setGeolocation] = useState
 
-  // const setTempUnit = (value: TemperatureUnit) => {
-  //   setTemperatureUnit(value);
-  // };
-
   const onSettings = useLocation().pathname === "/settings";
-
-  // const updateSettings = (key: string, value: string)
 
   return (
     <>

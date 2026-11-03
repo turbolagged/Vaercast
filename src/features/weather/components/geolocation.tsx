@@ -5,16 +5,9 @@ export default function UseGeolocation({
 }: {
   onLocation: (c: Coords) => void;
 }) {
-  let status: number;
-  //   let mapLink;
-
   function success(position: any) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-
-    // status.textContent = "";
-    // mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
-    // mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
     console.log(latitude, longitude);
     onLocation({
       latitude: position.coords.latitude,
@@ -23,17 +16,13 @@ export default function UseGeolocation({
   }
 
   function error() {
-    // status.textContent =
     console.log("Unable to retrieve your location");
   }
 
   function getLocation() {
     if (!navigator.geolocation) {
-      // status.textContent = "Geolocation is not supported by your browser";
     } else {
-      // status.textContent = "Locating…";
       navigator.geolocation.getCurrentPosition(success, error);
-      // console.log();
     }
   }
 

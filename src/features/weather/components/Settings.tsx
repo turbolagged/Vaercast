@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { useOutletContext } from "react-router";
 import type {
   Settings,
@@ -7,12 +6,10 @@ import type {
   WindSpeedUnit,
 } from "../weather";
 export default function Settings() {
-  // let tempUnit = "celsius";
   const { settings, setSettings } = useOutletContext<WeatherContext>();
 
   const setTempUnit = (value: TemperatureUnit): void => {
     localStorage.setItem("temp_unit", value.toString());
-    // setTemperatureUnit();
     setSettings((prevSettings: Settings) => ({
       ...prevSettings,
       temperatureUnit: value,
