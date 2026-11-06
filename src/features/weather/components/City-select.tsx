@@ -101,7 +101,7 @@ export default function SearchLocation() {
         </ul>
         <div>
           {forecastData?.current && (
-            <WeatherDetails forecastData={forecastData.current} />
+            <WeatherDetails forecast={forecastData.current} />
           )}
         </div>
 
