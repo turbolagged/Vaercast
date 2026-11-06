@@ -6,6 +6,7 @@ import { useOutletContext } from "react-router";
 import type { TemperatureUnit, WeatherContext } from "../weather";
 import UseGeolocation from "./geolocation";
 import type { Coords } from "../types";
+import WeatherDetails from "./Weather-details";
 
 function getSearchResults(location: string) {
   const { data, error, isLoading } = useSWR(
@@ -100,17 +101,7 @@ export default function SearchLocation() {
         </ul>
         <div>
           {forecastData?.current && (
-            <div>
-              <p>
-                Current Temp: {forecastData.current?.temperature_2m}{" "}
-                {currentTempUnit(settings.temperatureUnit)}
-              </p>
-
-              <strong>
-                Current Wind Speed: {forecastData?.current?.wind_speed_10m}{" "}
-                {settings.windSpeedUnit}
-              </strong>
-            </div>
+            <WeatherDetails forecastData={forecastData.current} />
           )}
         </div>
 
