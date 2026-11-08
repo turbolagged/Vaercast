@@ -1,4 +1,5 @@
 import type { Coords } from "../types";
+import locationIcon from "../../../assets/location_user.svg";
 
 export default function UseGeolocation({
   onLocation,
@@ -30,22 +31,14 @@ export default function UseGeolocation({
     <>
       <button
         onClick={getLocation}
-        aria-label="Current location"
-        className="w-fit rounded-full bg-slate-800 p-2 text-white shadow-md hover:bg-slate-700 cursor-pointer"
+        id="locate-btn"
+        type="button"
+        aria-label="Use my location"
+        className="cursor-pointer flex size-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/3 text-neutral-200 hover:bg-white/10 focus-visible:outline focus-visible:outline-lime-500"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          className="h-5 w-5"
-        >
-          <circle cx="12" cy="12" r="3" />
-          <circle cx="12" cy="12" r="7" />
-          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-        </svg>
+        <span data-icon="locate" className="size-4">
+          <img src={locationIcon} alt="loation_icon" />
+        </span>
       </button>
     </>
   );
