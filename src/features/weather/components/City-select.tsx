@@ -1,12 +1,13 @@
-import { useState, type ChangeEvent, type ReactHTMLElement } from "react";
+import { useState, type ChangeEvent } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import useSWR from "swr";
 import { geocodeUrl, forecastUrl, fetcher } from "../api";
 import { useOutletContext } from "react-router";
 import type { TemperatureUnit, WeatherContext } from "../weather";
-import UseGeolocation from "./geolocation";
+import UseGeolocation from "./Geolocation";
 import type { Coords } from "../types";
 import WeatherDetails from "./Weather-details";
+import searchIcon from "../../../assets/search_icon.svg";
 
 function getSearchResults(location: string) {
   const { data, error, isLoading } = useSWR(
@@ -35,9 +36,6 @@ export default function SearchLocation() {
     ? localStorage.getItem("temp_unit")
     : "celsius";
 
-  console.log(tempUnit + "in city");
-  // debugger;
-
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     // console.log(event.target.value);
     setShowSearchResults(true);
@@ -46,6 +44,10 @@ export default function SearchLocation() {
   };
 
   let { data, error, isLoading } = getSearchResults(debouncedValue);
+
+  // if (data) {
+  //   setShowSearchResults(true);
+  // }
 
   let { forecastData } = getforecastForSelectedLocation(
     selectedLocation?.latitude,
@@ -72,33 +74,61 @@ export default function SearchLocation() {
     console.log(value);
     setShowSearchResults(false);
     setSelectedLocation(value);
+    // setSearchValue("");
   };
 
   return (
     <>
-      <div className="flex justify-around items-center w-full">
-        <input
-          type="text"
-          onChange={handleSearchInput}
-          placeholder="Search place"
-          className="border border-gray-400 p-1 w-[80%] max-w-sm"
-        />
-
+      <div className="flex items-center gap-2">
+        <div className="group relative flex-1">
+          <label htmlFor="city-search" className="sr-only">
+            Search city
+          </label>
+          <div className="flex h-11 items-center gap-2 rounded-lg border border-white/10 bg-white/3 px-3 focus-within:border-lime-500/60">
+            <span className="size-4 text-natural-400 shrink-0">
+              <img src={searchIcon} alt="search_icion" />
+            </span>
+            <input
+              id="city-search"
+              type="text"
+              onChange={handleSearchInput}
+              placeholder="Search city"
+              className="bg-transparent text-neutral-100 text-sm placeholder:text-neutral-500 focus:outline-none"
+            />
+          </div>
+          {showSearchResults && data?.results?.length > 0 && (
+            <ul
+              className="absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-white/10 bg-neutral-800 py-1 shadow-xl group-focus-within:block"
+              role="listbox"
+            >
+              {data?.results?.map((result: any) => (
+                <li
+                  role="option"
+                  key={result.id}
+                  onClick={() => handleLocationSelect(result)}
+                >
+                  <button
+                    type="button"
+                    className="cursor-pointer flex w-full items-center gap-3 px-3 py-3 text-left text-sm hover:bg-white/5 focus:bg-white/5 focus:outline-none"
+                  >
+                    <span className="flex-1 truncate">
+                      {result?.name}, {result?.admin1}
+                    </span>
+                    <span className="text-xs text-neutral-500">
+                      {result?.country_code}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <UseGeolocation onLocation={(c: Coords) => updateCoords(c)} />
       </div>
-      <div>
-        <ul>
-          {showSearchResults &&
-            data?.results?.map((result: any) => (
-              <li
-                key={result.id}
-                onClick={() => handleLocationSelect(result)}
-                className="cursor-pointer"
-              >
-                {result?.name}, {result?.admin1}, {result?.country_code}
-              </li>
-            ))}
-        </ul>
+
+      <div className="">
+        {/* -------- data weather*/}
+
         <div>
           {forecastData?.current && (
             <WeatherDetails forecast={forecastData.current} />
@@ -106,7 +136,7 @@ export default function SearchLocation() {
         </div>
 
         <div className="mt-2">
-          <strong>Daily Average</strong>
+          {/* <strong>Daily Average</strong> */}
           {dailyMeanData?.length > 0 &&
             dailyMeanData.map((item: any) => (
               <p key={item.date}>
@@ -115,6 +145,8 @@ export default function SearchLocation() {
               </p>
             ))}
         </div>
+
+        {/* end details  */}
       </div>
     </>
   );
