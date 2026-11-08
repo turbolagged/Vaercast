@@ -30,7 +30,7 @@ export default function WeatherDetails({
             {tempUnit}
           </p>
           <p className="mt-1 min-h-5 text-sm tabular-nums text-neutral-400">
-            Feels Like {forecast?.temperature_2m} {tempUnit}
+            Feels Like {forecast?.apparent_temperature} {tempUnit}
           </p>
           <p className="mt-2 text-base text-neutral-300"> {description}</p>
           <p className="text-sm text-neutral-500">
