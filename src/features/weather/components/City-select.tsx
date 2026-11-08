@@ -3,7 +3,7 @@ import useDebounce from "../../../hooks/useDebounce";
 import useSWR from "swr";
 import { geocodeUrl, forecastUrl, fetcher } from "../api";
 import { useOutletContext } from "react-router";
-import type { TemperatureUnit, WeatherContext } from "../weather";
+import type { WeatherContext } from "../weather";
 import UseGeolocation from "./Geolocation";
 import type { Coords } from "../types";
 import WeatherDetails from "./Weather-details";
@@ -17,10 +17,10 @@ function getSearchResults(location: string) {
   return { data, error, isLoading };
 }
 
-function currentTempUnit(tempUnit: TemperatureUnit) {
-  if (!tempUnit) return "C";
-  return tempUnit === "celsius" ? "C" : "F";
-}
+// function currentTempUnit(tempUnit: TemperatureUnit) {
+//   if (!tempUnit) return "C";
+//   return tempUnit === "celsius" ? "C" : "F";
+// }
 
 export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -32,9 +32,9 @@ export default function SearchLocation() {
 
   const debouncedValue = useDebounce(searchValue, 500);
 
-  const tempUnit = localStorage.getItem("temp_unit")
-    ? localStorage.getItem("temp_unit")
-    : "celsius";
+  // const tempUnit = localStorage.getItem("temp_unit")
+  //   ? localStorage.getItem("temp_unit")
+  //   : "celsius";
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     // console.log(event.target.value);
@@ -43,7 +43,7 @@ export default function SearchLocation() {
     setSearchValue(event.target.value);
   };
 
-  let { data, error, isLoading } = getSearchResults(debouncedValue);
+  let { data } = getSearchResults(debouncedValue);
 
   // if (data) {
   //   setShowSearchResults(true);
@@ -57,14 +57,14 @@ export default function SearchLocation() {
     settings.windSpeedUnit,
   );
 
-  const dailyMeanData = forecastData?.daily?.time.map(
-    (day: string, index: number) => {
-      return {
-        date: day,
-        meanTemp: forecastData.daily.temperature_2m_mean[index],
-      };
-    },
-  );
+  // const dailyMeanData = forecastData?.daily?.time.map(
+  //   (day: string, index: number) => {
+  //     return {
+  //       date: day,
+  //       meanTemp: forecastData.daily.temperature_2m_mean[index],
+  //     };
+  //   },
+  // );
 
   const updateCoords = (c: Coords) => {
     setSelectedLocation(c);
@@ -126,17 +126,19 @@ export default function SearchLocation() {
         <UseGeolocation onLocation={(c: Coords) => updateCoords(c)} />
       </div>
 
-      <div className="">
-        {/* -------- data weather*/}
-
+      {/* -------- loc details*/}
+      <div>
         <div>
           {forecastData?.current && (
-            <WeatherDetails forecast={forecastData.current} />
+            <WeatherDetails
+              forecast={forecastData.current}
+              settings={settings}
+              selectedLocation={selectedLocation}
+            />
           )}
         </div>
 
-        <div className="mt-2">
-          {/* <strong>Daily Average</strong> */}
+        {/* <div className="mt-2">
           {dailyMeanData?.length > 0 &&
             dailyMeanData.map((item: any) => (
               <p key={item.date}>
@@ -144,10 +146,9 @@ export default function SearchLocation() {
                 {currentTempUnit(settings.temperatureUnit)}
               </p>
             ))}
-        </div>
-
-        {/* end details  */}
+        </div> */}
       </div>
+      {/* end details  */}
     </>
   );
 }
