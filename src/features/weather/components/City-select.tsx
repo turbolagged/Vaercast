@@ -49,7 +49,7 @@ export default function SearchLocation() {
   //   setShowSearchResults(true);
   // }
 
-  let { forecastData } = getforecastForSelectedLocation(
+  let { forecastData } = useForecastForSelectedLocation(
     selectedLocation?.latitude,
     selectedLocation?.longitude,
     selectedLocation?.timezone,
@@ -71,7 +71,7 @@ export default function SearchLocation() {
   };
 
   const handleLocationSelect = (value: any) => {
-    console.log(value);
+    console.log(value, "select loc");
     setShowSearchResults(false);
     setSelectedLocation(value);
     // setSearchValue("");
@@ -153,7 +153,7 @@ export default function SearchLocation() {
   );
 }
 
-function getforecastForSelectedLocation(
+function useForecastForSelectedLocation(
   latitude: number,
   longitude: number,
   timezone: string,
@@ -165,7 +165,7 @@ function getforecastForSelectedLocation(
     error: forecastDataError,
     isLoading: forecastLoading,
   } = useSWR(
-    latitude & longitude
+    latitude && longitude
       ? forecastUrl(latitude, longitude, timezone, tempUnit, windUnit)
       : null,
     fetcher,
@@ -173,6 +173,6 @@ function getforecastForSelectedLocation(
 
   // if (error) return {};
   // if (isLoading) return {};
-  // return data;
+  // // return  { forecastData, forecastDataError, forecastLoading };
   return { forecastData, forecastDataError, forecastLoading };
 }
