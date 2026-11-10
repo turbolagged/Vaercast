@@ -1,5 +1,6 @@
 import getUvDetails from "../../../utils/uvDetails";
 import getWeatherCodeDetails from "../../../utils/weatherCodeDetails";
+import { Tooltip } from "./Tooltip";
 
 export default function WeatherDetails({ forecast, settings, selectedLocation }: any) {
   if (!forecast) {
@@ -9,6 +10,7 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
   let { description, image: cloudImage } = getWeatherCodeDetails(forecast.weather_code, forecast.is_day);
   const tempUnit = settings.temperatureUnit === "celsius" ? "℃" : "℉";
   const uvStatus = getUvDetails(forecast.uv_index);
+  console.log(uvStatus);
 
   return (
     <>
@@ -31,21 +33,26 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
           </section>
           <section className="mt-8 grid grid-cols-2 gap-3">
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
-              <p className="mt-3 text-base font-medium">{Math.round(forecast.wind_speed_10m)} kmph</p>
+              <p className="text-base font-medium">{Math.round(forecast.wind_speed_10m)} kmph</p>
               <p className="text-sm text-neutral-500">Wind</p>
             </div>
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
-              <p className="mt-3 text-base font-medium">{forecast.relative_humidity_2m}%</p>
+              <p className="text-base font-medium">{forecast.relative_humidity_2m}%</p>
               <p className="text-sm text-neutral-500">Humidity</p>
             </div>
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
-              <p className="mt-3 text-base font-medium">
-                {uvStatus?.category} ({uvStatus?.uvValue})
-              </p>
+              <div className=" flex justify-around">
+                <div>
+                  {uvStatus?.category} ({uvStatus?.uvValue})
+                </div>
+                <div className="pl-2">
+                  <Tooltip message={uvStatus?.protection ?? null}>?</Tooltip>
+                </div>
+              </div>
               <p className="text-sm text-neutral-500">UV Index</p>
             </div>
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
-              <p className="mt-3 text-base font-medium">{forecast.pressure_msl} hPa</p>
+              <p className="text-base font-medium">{forecast.pressure_msl} hPa</p>
               <p className="text-sm text-neutral-500">Pressure</p>
             </div>
           </section>

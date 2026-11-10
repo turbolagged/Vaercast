@@ -1,9 +1,1 @@
 @import "tailwindcss";
-
-@theme {
-  --color-page: #b9cbbf;   /* dusty sage */
-  --color-card: #d3e0d6;   /* lighter sage, not white */
-  --color-line: #a5b9ab;   /* soft border */
-  --color-main: #2e3b33;   /* soft dark green-gray, not black */
-  --color-muted: #55665b;  /* secondary text */
-}
