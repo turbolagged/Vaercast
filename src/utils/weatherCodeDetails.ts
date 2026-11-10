@@ -10,7 +10,7 @@ type DayNightWeather = {
 };
 const weatherCodes: Record<string, DayNightWeather> = rawWeatherCodesDetails;
 
-export default function weatherCodeDetails(code: number, isDay: number) {
+export default function getWeatherCodeDetails(code: number, isDay: number) {
   const entry: DayNightWeather = weatherCodes[code] ?? fallbackResponses();
 
   if (!entry) return fallbackResponses();

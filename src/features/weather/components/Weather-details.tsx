@@ -1,12 +1,14 @@
-import weatherCodeDetails from "../../../utils/weatherCodeDetails";
+import getUvDetails from "../../../utils/uvDetails";
+import getWeatherCodeDetails from "../../../utils/weatherCodeDetails";
 
 export default function WeatherDetails({ forecast, settings, selectedLocation }: any) {
   if (!forecast) {
     return <p>No data found ...</p>;
   }
 
-  let { description, image: cloudImage } = weatherCodeDetails(forecast.weather_code, forecast.is_day);
+  let { description, image: cloudImage } = getWeatherCodeDetails(forecast.weather_code, forecast.is_day);
   const tempUnit = settings.temperatureUnit === "celsius" ? "℃" : "℉";
+  const uvStatus = getUvDetails(forecast.uv_index);
 
   return (
     <>
@@ -37,7 +39,9 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
               <p className="text-sm text-neutral-500">Humidity</p>
             </div>
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
-              <p className="mt-3 text-base font-medium">{Math.round(forecast.uv_index)}</p>
+              <p className="mt-3 text-base font-medium">
+                {uvStatus?.category} ({uvStatus?.uvValue})
+              </p>
               <p className="text-sm text-neutral-500">UV Index</p>
             </div>
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
