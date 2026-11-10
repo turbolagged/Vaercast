@@ -32,15 +32,11 @@ export default function Weather() {
       <div className="min-h-dvh bg-neutral-900 text-neutral-100 antialiased">
         <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pb-6 pt-5 sm:px-0 sm:pt-10">
           <main className="flex-1">
-            <Outlet
-              context={{ settings, setSettings } satisfies WeatherContext}
-            />
+            <Outlet context={{ settings, setSettings } satisfies WeatherContext} />
           </main>
 
-          <footer className="border-t border-white/10 pt-5 flex items-center justify-center gap-10">
-            <NavLink to={onSettings ? "/" : "/settings"}>
-              {onSettings ? "Weather" : "Settings"}
-            </NavLink>
+          <footer className="border-t border-white/10 pt-5 mt-5 flex items-center justify-center gap-10">
+            <NavLink to={onSettings ? "/" : "/settings"}>{onSettings ? "Weather" : "Settings"}</NavLink>
           </footer>
         </div>
       </div>

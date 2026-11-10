@@ -1,6 +1,7 @@
 import getUvDetails from "../../../utils/uvDetails";
 import getWeatherCodeDetails from "../../../utils/weatherCodeDetails";
 import { Tooltip } from "./Tooltip";
+import { LuWind, LuDroplet, LuSun, LuGauge, LuInfo } from "react-icons/lu";
 
 export default function WeatherDetails({ forecast, settings, selectedLocation }: any) {
   if (!forecast) {
@@ -32,26 +33,36 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
             </p>
           </section>
           <section className="mt-8 grid grid-cols-2 gap-3">
-            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
+            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">
+              <LuWind className="mb-1 text-2xl text-neutral-400" strokeWidth={2} />
+
               <p className="text-base font-medium">{Math.round(forecast.wind_speed_10m)} kmph</p>
               <p className="text-sm text-neutral-500">Wind</p>
             </div>
-            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
+            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">
+              <LuDroplet className="mb-1 text-2xl text-neutral-400" strokeWidth={2} />
+
               <p className="text-base font-medium">{forecast.relative_humidity_2m}%</p>
               <p className="text-sm text-neutral-500">Humidity</p>
             </div>
-            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
-              <div className=" flex justify-around">
-                <div>
+            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">
+              <LuSun className="mb-1 text-2xl text-neutral-400" strokeWidth={2} />
+
+              <div className="flex items-center justify-around">
+                <div className="">
                   {uvStatus?.category} ({uvStatus?.uvValue})
                 </div>
                 <div className="pl-2">
-                  <Tooltip message={uvStatus?.protection ?? null}>?</Tooltip>
+                  <Tooltip message={uvStatus?.protection ?? null}>
+                    <LuInfo className="text-lg text-neutral-400" strokeWidth={2} />
+                  </Tooltip>
                 </div>
               </div>
               <p className="text-sm text-neutral-500">UV Index</p>
             </div>
-            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 px-3 py-5">
+            <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">
+              <LuGauge className="mb-1 text-2xl text-neutral-400" strokeWidth={2} />
+
               <p className="text-base font-medium">{forecast.pressure_msl} hPa</p>
               <p className="text-sm text-neutral-500">Pressure</p>
             </div>
