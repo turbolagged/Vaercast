@@ -4,6 +4,11 @@ A weather app built while learning React. Search any place in the world, or use 
 
 **Live demo:** https://vaercast.vercel.app/
 
+<p>
+  <img src="docs/screenshot-1-main.png" alt="Main view with current conditions" width="260" />
+  <img src="docs/screenshot-2-uv-tooltip.png" alt="UV index tooltip open" width="260" />
+</p>
+
 ## Stack
 
 - **React + TypeScript** (Vite)
