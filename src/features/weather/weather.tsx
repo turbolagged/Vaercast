@@ -1,20 +1,23 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { NavLink, Outlet, useLocation } from "react-router";
 
-export type TemperatureUnit = "celsius" | "fahrenheit";
-export type WindSpeedUnit = "kmh" | "ms" | "mph" | "kn";
-export type PrecipitationUnit = "mm" | "inch";
+const TEMPERATURE_UNIT = ["celsius", "fahrenheit"] as const;
+const WIND_SPEED_UNIT = ["kmh", "ms", "mph", "kn"] as const;
+
+export type TemperatureUnit = (typeof TEMPERATURE_UNIT)[number];
+export type WindSpeedUnit = (typeof WIND_SPEED_UNIT)[number];
+// export type PrecipitationUnit = "mm" | "inch";
 
 export type Settings = {
   temperatureUnit: TemperatureUnit;
   windSpeedUnit: WindSpeedUnit;
-  precipitationUnit: PrecipitationUnit;
+  // precipitationUnit: PrecipitationUnit;
 };
 
 const DEFAULT_SETTINGS: Settings = {
   temperatureUnit: "celsius",
   windSpeedUnit: "kmh",
-  precipitationUnit: "mm",
+  // precipitationUnit: "mm",
 };
 
 export interface WeatherContext {
@@ -26,6 +29,8 @@ export default function Weather() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
 
   const onSettings = useLocation().pathname === "/settings";
+
+  loadSettings({ settings, setSettings });
 
   return (
     <>
@@ -42,4 +47,29 @@ export default function Weather() {
       </div>
     </>
   );
+}
+
+function loadSettings({ setSettings }: WeatherContext) {
+  useEffect(() => {
+    let windUnit;
+    let tempUnit;
+    try {
+      windUnit = localStorage.getItem("wind_unit");
+      tempUnit = localStorage.getItem("temp_unit");
+    } catch (error) {
+      windUnit = null;
+      tempUnit = null;
+    }
+
+    const hasTempUnit = (value: unknown): value is TemperatureUnit =>
+      TEMPERATURE_UNIT.includes(value as TemperatureUnit);
+    const hasWindUnit = (value: unknown): value is WindSpeedUnit => WIND_SPEED_UNIT.includes(value as WindSpeedUnit);
+
+    if (windUnit || tempUnit) {
+      setSettings({
+        temperatureUnit: hasTempUnit(tempUnit) ? tempUnit : DEFAULT_SETTINGS.temperatureUnit,
+        windSpeedUnit: hasWindUnit(windUnit) ? windUnit : DEFAULT_SETTINGS.windSpeedUnit,
+      });
+    }
+  }, []);
 }

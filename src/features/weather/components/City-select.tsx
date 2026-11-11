@@ -34,18 +34,12 @@ export default function SearchLocation() {
   //   : "celsius";
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
-    // console.log(event.target.value);
     setShowSearchResults(true);
     setSelectedLocation(null);
     setSearchValue(event.target.value);
   };
 
   let { data } = getSearchResults(debouncedValue);
-
-  if (data) {
-    // setShowSearchResults(true);
-    console.log(data);
-  }
 
   let { forecastData } = useForecastForSelectedLocation(
     selectedLocation?.latitude,
@@ -69,10 +63,8 @@ export default function SearchLocation() {
   };
 
   const handleLocationSelect = (value: any) => {
-    console.log(value, "select loc");
     setShowSearchResults(false);
     setSelectedLocation(value);
-    // setSearchValue("");
   };
 
   return (
