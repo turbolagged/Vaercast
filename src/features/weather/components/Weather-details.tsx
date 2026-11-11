@@ -36,7 +36,7 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">
               <LuWind className="mb-1 text-2xl text-neutral-400" strokeWidth={2} />
 
-              <p className="text-base font-medium">{Math.round(forecast.wind_speed_10m)} kmph</p>
+              <p className="text-base font-medium">{Math.round(forecast.wind_speed_10m)} km/h</p>
               <p className="text-sm text-neutral-500">Wind</p>
             </div>
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">

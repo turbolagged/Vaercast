@@ -10,10 +10,7 @@ import WeatherDetails from "./Weather-details";
 import searchIcon from "../../../assets/search_icon.svg";
 
 function getSearchResults(location: string) {
-  const { data, error, isLoading } = useSWR(
-    location ? geocodeUrl(location) : null,
-    fetcher,
-  );
+  const { data, error, isLoading } = useSWR(location ? geocodeUrl(location) : null, fetcher);
   return { data, error, isLoading };
 }
 
@@ -45,9 +42,10 @@ export default function SearchLocation() {
 
   let { data } = getSearchResults(debouncedValue);
 
-  // if (data) {
-  //   setShowSearchResults(true);
-  // }
+  if (data) {
+    // setShowSearchResults(true);
+    console.log(data);
+  }
 
   let { forecastData } = useForecastForSelectedLocation(
     selectedLocation?.latitude,
@@ -99,24 +97,16 @@ export default function SearchLocation() {
           {showSearchResults && data?.results?.length > 0 && (
             <ul
               className="absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-white/10 bg-neutral-800 py-1 shadow-xl group-focus-within:block"
-              role="listbox"
-            >
+              role="listbox">
               {data?.results?.map((result: any) => (
-                <li
-                  role="option"
-                  key={result.id}
-                  onClick={() => handleLocationSelect(result)}
-                >
+                <li role="option" key={result.id} onClick={() => handleLocationSelect(result)}>
                   <button
                     type="button"
-                    className="cursor-pointer flex w-full items-center gap-3 px-3 py-3 text-left text-sm hover:bg-white/5 focus:bg-white/5 focus:outline-none"
-                  >
+                    className="cursor-pointer flex w-full items-center gap-3 px-3 py-3 text-left text-sm hover:bg-white/5 focus:bg-white/5 focus:outline-none">
                     <span className="flex-1 truncate">
                       {result?.name}, {result?.admin1}
                     </span>
-                    <span className="text-xs text-neutral-500">
-                      {result?.country_code}
-                    </span>
+                    <span className="text-xs text-neutral-500">{result?.country_code}</span>
                   </button>
                 </li>
               ))}
@@ -125,16 +115,18 @@ export default function SearchLocation() {
         </div>
         <UseGeolocation onLocation={(c: Coords) => updateCoords(c)} />
       </div>
+      {showSearchResults && !data?.results && (
+        <section className="text-center py-7 px-2">
+          <p className="text-base font-medium">No places found</p>
+          <small className="mt-1 text-sm text-neutral-500">Check the spelling or try a nearby city. </small>
+        </section>
+      )}
 
       {/* -------- loc details*/}
       <div>
         <div>
           {forecastData?.current && (
-            <WeatherDetails
-              forecast={forecastData.current}
-              settings={settings}
-              selectedLocation={selectedLocation}
-            />
+            <WeatherDetails forecast={forecastData.current} settings={settings} selectedLocation={selectedLocation} />
           )}
         </div>
 
@@ -164,12 +156,7 @@ function useForecastForSelectedLocation(
     data: forecastData,
     error: forecastDataError,
     isLoading: forecastLoading,
-  } = useSWR(
-    latitude && longitude
-      ? forecastUrl(latitude, longitude, timezone, tempUnit, windUnit)
-      : null,
-    fetcher,
-  );
+  } = useSWR(latitude && longitude ? forecastUrl(latitude, longitude, timezone, tempUnit, windUnit) : null, fetcher);
 
   // if (error) return {};
   // if (isLoading) return {};
