@@ -8,6 +8,8 @@ import UseGeolocation from "./Geolocation";
 import type { Coords } from "../types";
 import WeatherDetails from "./Weather-details";
 import searchIcon from "../../../assets/search_icon.svg";
+import { LuLocateFixed } from "react-icons/lu";
+import { TbCloudSearch } from "react-icons/tb";
 
 function getSearchResults(location: string) {
   const { data, error, isLoading } = useSWR(location ? geocodeUrl(location) : null, fetcher);
@@ -111,6 +113,23 @@ export default function SearchLocation() {
         <section className="text-center py-7 px-2">
           <p className="text-base font-medium">No places found</p>
           <small className="mt-1 text-sm text-neutral-500">Check the spelling or try a nearby city. </small>
+        </section>
+      )}
+      {!showSearchResults && !data?.results && (
+        <section className="py-16 px-2 flex flex-col items-center gap-2 text-center">
+          <TbCloudSearch className="h-16 w-16 text-lime-600" aria-hidden="true" />
+          <h3 className="text-xl font-medium mt-4">Check the weather anywhere</h3>
+          <p className="text-sm text-neutral-400 leading-relaxed text-balance">
+            Search for a city, or let Vaercast find <br></br>where you are.
+          </p>
+          <div>
+            <button
+              className="bg-transparent flex justify-between items-center border border-white py-2 px-4 rounded-xl h-11 mt-5 cursor-pointer"
+              type="button">
+              <LuLocateFixed className="h-4 w-4 text-white mr-2" aria-hidden="true" />
+              <span>Use my location</span>
+            </button>
+          </div>
         </section>
       )}
 
