@@ -1,5 +1,4 @@
 import type { Coords } from "../types";
-import locationIcon from "../../../assets/location_user.svg";
 import { LuLocateFixed } from "react-icons/lu";
 
 type geolocationProps = {
@@ -9,9 +8,6 @@ type geolocationProps = {
 
 export default function UseGeolocation({ onLocation, uiState = "initial" }: geolocationProps) {
   function success(position: any) {
-    // const latitude = position.coords.latitude;
-    // const longitude = position.coords.longitude;
-    // console.log(latitude, longitude);
     onLocation({
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,

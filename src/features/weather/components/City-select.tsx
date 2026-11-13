@@ -8,18 +8,12 @@ import UseGeolocation from "./Geolocation";
 import type { Coords } from "../types";
 import WeatherDetails from "./Weather-details";
 import searchIcon from "../../../assets/search_icon.svg";
-import { LuLocateFixed } from "react-icons/lu";
 import { TbCloudSearch } from "react-icons/tb";
 
 function getSearchResults(location: string) {
   const { data, error, isLoading } = useSWR(location ? geocodeUrl(location) : null, fetcher);
   return { data, error, isLoading };
 }
-
-// function currentTempUnit(tempUnit: TemperatureUnit) {
-//   if (!tempUnit) return "C";
-//   return tempUnit === "celsius" ? "C" : "F";
-// }
 
 export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -43,7 +37,7 @@ export default function SearchLocation() {
 
   let { data } = getSearchResults(debouncedValue);
 
-  let { forecastData } = useForecastForSelectedLocation(
+  let { forecastData, forecastLoading } = useForecastForSelectedLocation(
     selectedLocation?.latitude,
     selectedLocation?.longitude,
     selectedLocation?.timezone,
@@ -88,6 +82,7 @@ export default function SearchLocation() {
               className="bg-transparent text-neutral-100 text-sm placeholder:text-neutral-500 focus:outline-none"
             />
           </div>
+          {/* search results  */}
           {showSearchResults && data?.results?.length > 0 && (
             <ul
               className="absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-white/10 bg-neutral-800 py-1 shadow-xl group-focus-within:block"
@@ -109,12 +104,15 @@ export default function SearchLocation() {
         </div>
         {forecastData?.current && <UseGeolocation onLocation={updateCoords} uiState="top" />}
       </div>
+      {/* no data found  */}
       {showSearchResults && !data?.results && (
         <section className="text-center py-7 px-2">
           <p className="text-base font-medium">No places found</p>
           <small className="mt-1 text-sm text-neutral-500">Check the spelling or try a nearby city. </small>
         </section>
       )}
+
+      {/* intiaial state  */}
       {!showSearchResults && !data?.results && (
         <section className="py-16 px-2 flex flex-col items-center gap-2 text-center">
           <TbCloudSearch className="h-16 w-16 text-lime-600" aria-hidden="true" />
@@ -122,28 +120,17 @@ export default function SearchLocation() {
           <p className="text-sm text-neutral-400 leading-relaxed text-balance">
             Search for a city, or let Vaercast find <br></br>where you are.
           </p>
-          {/* <div>
-            <button
-              className="bg-transparent flex justify-between items-center border border-white py-2 px-4 rounded-xl h-11 mt-5 cursor-pointer"
-              type="button">
-              <LuLocateFixed className="h-4 w-4 text-white mr-2" aria-hidden="true" />
-              <span>Use my location</span>
-            </button>
-          </div> */}
 
           {!data?.result && <UseGeolocation onLocation={updateCoords} uiState="initial" />}
         </section>
       )}
 
       {/* -------- loc details*/}
-      <div>
-        <div>
-          {forecastData?.current && (
-            <WeatherDetails forecast={forecastData.current} settings={settings} selectedLocation={selectedLocation} />
-          )}
-        </div>
+      {forecastData?.current && (
+        <WeatherDetails forecast={forecastData.current} settings={settings} selectedLocation={selectedLocation} />
+      )}
 
-        {/* <div className="mt-2">
+      {/* <div className="mt-2">
           {dailyMeanData?.length > 0 &&
             dailyMeanData.map((item: any) => (
               <p key={item.date}>
@@ -152,7 +139,6 @@ export default function SearchLocation() {
               </p>
             ))}
         </div> */}
-      </div>
       {/* end details  */}
     </>
   );
