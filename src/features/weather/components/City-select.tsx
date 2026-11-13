@@ -107,7 +107,7 @@ export default function SearchLocation() {
             </ul>
           )}
         </div>
-        <UseGeolocation onLocation={(c: Coords) => updateCoords(c)} />
+        {forecastData?.current && <UseGeolocation onLocation={updateCoords} uiState="top" />}
       </div>
       {showSearchResults && !data?.results && (
         <section className="text-center py-7 px-2">
@@ -122,14 +122,16 @@ export default function SearchLocation() {
           <p className="text-sm text-neutral-400 leading-relaxed text-balance">
             Search for a city, or let Vaercast find <br></br>where you are.
           </p>
-          <div>
+          {/* <div>
             <button
               className="bg-transparent flex justify-between items-center border border-white py-2 px-4 rounded-xl h-11 mt-5 cursor-pointer"
               type="button">
               <LuLocateFixed className="h-4 w-4 text-white mr-2" aria-hidden="true" />
               <span>Use my location</span>
             </button>
-          </div>
+          </div> */}
+
+          {!data?.result && <UseGeolocation onLocation={updateCoords} uiState="initial" />}
         </section>
       )}
 
