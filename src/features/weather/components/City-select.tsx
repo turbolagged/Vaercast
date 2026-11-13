@@ -9,6 +9,7 @@ import type { Coords } from "../types";
 import WeatherDetails from "./Weather-details";
 import searchIcon from "../../../assets/search_icon.svg";
 import { TbCloudSearch } from "react-icons/tb";
+import Spinner from "./Spinner";
 
 function getSearchResults(location: string) {
   const { data, error, isLoading } = useSWR(location ? geocodeUrl(location) : null, fetcher);
@@ -19,25 +20,23 @@ export default function SearchLocation() {
   const [searchValue, setSearchValue] = useState<string>("");
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [geolocateStatus, setGeolocateStatus] = useState<"loading" | "error" | "idle">("idle");
   // const [coords, setCoords] = useState<Coords | null>(null);
 
   const { settings } = useOutletContext<WeatherContext>();
 
   const debouncedValue = useDebounce(searchValue, 500);
 
-  // const tempUnit = localStorage.getItem("temp_unit")
-  //   ? localStorage.getItem("temp_unit")
-  //   : "celsius";
-
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     setShowSearchResults(true);
     setSelectedLocation(null);
     setSearchValue(event.target.value);
+    setGeolocateStatus("idle");
   };
 
   let { data } = getSearchResults(debouncedValue);
 
-  let { forecastData, forecastLoading } = useForecastForSelectedLocation(
+  let { forecastData, forecastLoading, forecastDataError } = useForecastForSelectedLocation(
     selectedLocation?.latitude,
     selectedLocation?.longitude,
     selectedLocation?.timezone,
@@ -63,6 +62,18 @@ export default function SearchLocation() {
     setSelectedLocation(value);
   };
 
+  const renderForecastContent = () => {
+    if ((selectedLocation && forecastLoading) || geolocateStatus === "loading") {
+      return <Spinner />;
+    } else if (selectedLocation && forecastDataError) {
+      return <p className="py-6 text-center text-lg">Something went wrong :( </p>;
+    } else if (forecastData?.current) {
+      return (
+        <WeatherDetails forecast={forecastData?.current} settings={settings} selectedLocation={selectedLocation} />
+      );
+    }
+  };
+
   return (
     <>
       <div className="flex items-center gap-2">
@@ -75,11 +86,12 @@ export default function SearchLocation() {
               <img src={searchIcon} alt="search_icion" />
             </span>
             <input
+              value={searchValue}
               id="city-search"
               type="text"
               onChange={handleSearchInput}
               placeholder="Search city"
-              className="bg-transparent text-neutral-100 text-sm placeholder:text-neutral-500 focus:outline-none"
+              className="bg-transparent text-neutral-100 text-sm placeholder:text-neutral-500 focus:outline-none w-full"
             />
           </div>
           {/* search results  */}
@@ -102,7 +114,9 @@ export default function SearchLocation() {
             </ul>
           )}
         </div>
-        {forecastData?.current && <UseGeolocation onLocation={updateCoords} uiState="top" />}
+        {forecastData?.current && (
+          <UseGeolocation onLocation={updateCoords} uiState="top" setGeolocateStatus={setGeolocateStatus} />
+        )}
       </div>
       {/* no data found  */}
       {showSearchResults && !data?.results && (
@@ -113,7 +127,7 @@ export default function SearchLocation() {
       )}
 
       {/* intiaial state  */}
-      {!showSearchResults && !data?.results && (
+      {!searchValue.trim() && !selectedLocation && geolocateStatus === "idle" && (
         <section className="py-16 px-2 flex flex-col items-center gap-2 text-center">
           <TbCloudSearch className="h-16 w-16 text-lime-600" aria-hidden="true" />
           <h3 className="text-xl font-medium mt-4">Check the weather anywhere</h3>
@@ -121,14 +135,15 @@ export default function SearchLocation() {
             Search for a city, or let Vaercast find <br></br>where you are.
           </p>
 
-          {!data?.result && <UseGeolocation onLocation={updateCoords} uiState="initial" />}
+          {!data?.result && (
+            <UseGeolocation onLocation={updateCoords} uiState="initial" setGeolocateStatus={setGeolocateStatus} />
+          )}
         </section>
       )}
+      {geolocateStatus === "error" && <p className="text-center mt-12 text-lg">Unable to retrive your location</p>}
 
       {/* -------- loc details*/}
-      {forecastData?.current && (
-        <WeatherDetails forecast={forecastData.current} settings={settings} selectedLocation={selectedLocation} />
-      )}
+      {renderForecastContent()}
 
       {/* <div className="mt-2">
           {dailyMeanData?.length > 0 &&
@@ -155,7 +170,10 @@ function useForecastForSelectedLocation(
     data: forecastData,
     error: forecastDataError,
     isLoading: forecastLoading,
-  } = useSWR(latitude && longitude ? forecastUrl(latitude, longitude, timezone, tempUnit, windUnit) : null, fetcher);
+  } = useSWR(
+    latitude != null && longitude != null ? forecastUrl(latitude, longitude, timezone, tempUnit, windUnit) : null,
+    fetcher,
+  );
 
   // if (error) return {};
   // if (isLoading) return {};

@@ -1,26 +1,30 @@
 import type { Coords } from "../types";
 import { LuLocateFixed } from "react-icons/lu";
-
 type geolocationProps = {
   onLocation: (c: Coords) => void;
+  setGeolocateStatus: (value: "loading" | "error" | "idle") => void;
   uiState: "top" | "initial";
 };
 
-export default function UseGeolocation({ onLocation, uiState = "initial" }: geolocationProps) {
+export default function UseGeolocation({ onLocation, uiState = "initial", setGeolocateStatus }: geolocationProps) {
   function success(position: any) {
     onLocation({
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
     });
+    setGeolocateStatus("idle");
   }
 
   function error() {
+    setGeolocateStatus("error");
     console.log("Unable to retrieve your location");
   }
 
   function getLocation() {
     if (!navigator.geolocation) {
+      setGeolocateStatus("error");
     } else {
+      setGeolocateStatus("loading");
       navigator.geolocation.getCurrentPosition(success, error);
     }
   }
