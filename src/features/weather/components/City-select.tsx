@@ -119,7 +119,7 @@ export default function SearchLocation() {
         )}
       </div>
       {/* no data found  */}
-      {showSearchResults && !data?.results && (
+      {searchValue && showSearchResults && !data?.results && (
         <section className="text-center py-7 px-2">
           <p className="text-base font-medium">No places found</p>
           <small className="mt-1 text-sm text-neutral-500">Check the spelling or try a nearby city. </small>
