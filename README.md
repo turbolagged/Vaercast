@@ -1,12 +1,14 @@
 # Vaercast
 
-A weather app built while learning React. Search any place in the world, or use your current location, and see its current conditions: temperature, wind, humidity, UV index, and pressure. Powered by Open-Meteo.
+A mobile-first weather web app built while learning React. Search any place in the world, or use your current location, and see its current conditions: temperature, wind, humidity, UV index, and pressure. Powered by [Open-Meteo](https://open-meteo.com/).
 
 **Live demo:** https://vaercast.vercel.app/
 
 <p>
-  <img src="docs/screenshot-1-main.png" alt="Main view with current conditions" width="260" />
-  <img src="docs/screenshot-2-uv-tooltip.png" alt="UV index tooltip open" width="260" />
+  <img src="docs/screenshot-1-empty.png" alt="Home screen with empty state and use my location button" width="200" /> &nbsp;
+  <img src="docs/screenshot-2-weather.png" alt="Weather details with wind, humidity, UV index and pressure" width="200" /> &nbsp;
+  <img src="docs/screenshot-3-uv-tooltip.png" alt="UV index popover open" width="200" /> &nbsp;
+  <img src="docs/screenshot-4-settings.png" alt="Settings with temperature and wind unit options" width="200" />
 </p>
 
 ## Stack
@@ -19,23 +21,24 @@ A weather app built while learning React. Search any place in the world, or use 
 
 ## Features
 
-- City search with a debounced input, so a request only fires after you stop typing
-- No request is sent when the search box is empty (SWR key is `null`)
-- Current conditions for the searched city or the user’s current location: temperature, weather description, and icon
-- Detail cards for wind (speed), humidity, UV index, and pressure
-- UV index shown with its WHO category (for example, "Moderate (5)") and an info tooltip with burn time and protection advice
-- Accessible, button-based tooltip that works by tap on mobile and by click on desktop
-- Loading and error states handled by SWR, with caching by city
-- Fully typed API response shape end to end (fetcher → SWR generic → JSX)
 - Mobile-first layout with a soft, muted dark theme
+- Friendly empty state with a "Use my location" shortcut
+- City search with a debounced input, so a request only fires after you stop typing, and none is sent while the search box is empty
+- Current conditions for a searched city or your current location: temperature, weather description, and icon
+- Location label with a timezone fallback when no place name is available
+- Detail cards with icons for wind speed, humidity, UV index, and pressure
+- UV index shown with its WHO category (for example, "Moderate (5)") and an info popover with burn time and protection advice
+- Accessible, button-based popover that works by tap on mobile and click on desktop
+- Settings screen to switch temperature and wind speed units
+- Note: opening Settings and returning home clears the current search
 
 ## Planned
 
-- Full unit conversion (temperature, wind speed, pressure), currently only partly functional
-- Upcoming days forecast
-- Picker for cities with the same name (for example, Paris, France vs. Paris, Texas)
-- Day and night themes based on local sunset time
-- Zustand for shared state
+- Complete unit conversion for temperature, wind speed, and pressure (currently only partly functional)
+- Multi-day forecast
+- City picker for places with the same name (for example, Paris, France vs. Paris, Texas)
+- Day and night themes based on the local sunrise and sunset times
+- Shared state with Zustand, so the current search survives a visit to Settings
 
 ## Getting started
 
