@@ -3,7 +3,7 @@ import getWeatherCodeDetails from "../../../utils/weatherCodeDetails";
 import { Tooltip } from "./Tooltip";
 import { LuWind, LuDroplet, LuSun, LuGauge, LuInfo } from "react-icons/lu";
 
-export default function WeatherDetails({ forecast, settings, selectedLocation }: any) {
+export default function WeatherDetails({ forecast, settings, selectedLocation, timezone }: any) {
   if (!forecast) {
     return <p>No data found ...</p>;
   }
@@ -12,6 +12,9 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
   const tempUnit = settings.temperatureUnit === "celsius" ? "℃" : "℉";
   const windUnit = settings.windSpeedUnit === "kmh" ? "km/h" : "mph";
   const uvStatus = getUvDetails(forecast.uv_index);
+  const locationLabel =
+    [selectedLocation?.name, selectedLocation?.admin1, selectedLocation?.country_code].filter(Boolean).join(", ") ||
+    timezone;
 
   return (
     <>
@@ -28,9 +31,7 @@ export default function WeatherDetails({ forecast, settings, selectedLocation }:
               Feels Like {forecast?.apparent_temperature} {tempUnit}
             </p>
             <p className="mt-2 text-base text-neutral-300"> {description}</p>
-            <p className="text-sm text-neutral-500">
-              {selectedLocation?.name}, {selectedLocation?.admin1}, {selectedLocation?.country_code}
-            </p>
+            <p className="text-sm text-neutral-500">{locationLabel}</p>
           </section>
           <section className="mt-8 grid grid-cols-2 gap-3">
             <div className="flex flex-col bg-natural-600 items-center rounded-xl bg-white/4 p-3">

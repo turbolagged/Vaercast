@@ -69,7 +69,12 @@ export default function SearchLocation() {
       return <p className="py-6 text-center text-lg">Something went wrong :( </p>;
     } else if (forecastData?.current) {
       return (
-        <WeatherDetails forecast={forecastData?.current} settings={settings} selectedLocation={selectedLocation} />
+        <WeatherDetails
+          timezone={forecastData.timezone}
+          forecast={forecastData?.current}
+          settings={settings}
+          selectedLocation={selectedLocation}
+        />
       );
     }
   };
