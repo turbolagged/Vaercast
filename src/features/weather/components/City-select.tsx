@@ -10,6 +10,19 @@ import WeatherDetails from "./Weather-details";
 import searchIcon from "../../../assets/search_icon.svg";
 import { TbCloudSearch } from "react-icons/tb";
 import Spinner from "./Spinner";
+import FiveDayForecast from "./Five-day-forecast";
+
+// type ForecastData = {
+//   daily: {
+//     time: string[];
+//     temperature_2m_mean: number[];
+//   };
+// };
+
+export type ForecastDay = {
+  date: string;
+  meanTemp: number;
+};
 
 function getSearchResults(location: string) {
   const { data, error, isLoading } = useSWR(location ? geocodeUrl(location) : null, fetcher);
@@ -44,14 +57,12 @@ export default function SearchLocation() {
     settings.windSpeedUnit,
   );
 
-  // const dailyMeanData = forecastData?.daily?.time.map(
-  //   (day: string, index: number) => {
-  //     return {
-  //       date: day,
-  //       meanTemp: forecastData.daily.temperature_2m_mean[index],
-  //     };
-  //   },
-  // );
+  const dailyMeanData: ForecastDay[] | undefined = forecastData?.daily?.time.map((day: string, index: number) => {
+    return {
+      date: day,
+      meanTemp: forecastData.daily.temperature_2m_mean[index],
+    };
+  });
 
   const updateCoords = (c: Coords) => {
     setSelectedLocation(c);
@@ -150,16 +161,12 @@ export default function SearchLocation() {
       {/* -------- loc details*/}
       {renderForecastContent()}
 
-      {/* <div className="mt-2">
-          {dailyMeanData?.length > 0 &&
-            dailyMeanData.map((item: any) => (
-              <p key={item.date}>
-                {item.date} : {item.meanTemp}
-                {currentTempUnit(settings.temperatureUnit)}
-              </p>
-            ))}
-        </div> */}
-      {/* end details  */}
+      {/* five day forecast  */}
+      {dailyMeanData && dailyMeanData?.length > 0 && (
+        <section className="mt-8 items-center gap-2 text-center">
+          <FiveDayForecast dailyMeanData={dailyMeanData} settings={settings} />
+        </section>
+      )}
     </>
   );
 }
