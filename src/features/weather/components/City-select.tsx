@@ -12,16 +12,10 @@ import { TbCloudSearch } from "react-icons/tb";
 import Spinner from "./Spinner";
 import FiveDayForecast from "./Five-day-forecast";
 
-// type ForecastData = {
-//   daily: {
-//     time: string[];
-//     temperature_2m_mean: number[];
-//   };
-// };
-
 export type ForecastDay = {
   date: string;
   meanTemp: number;
+  couldCover: number;
 };
 
 function getSearchResults(location: string) {
@@ -61,6 +55,7 @@ export default function SearchLocation() {
     return {
       date: day,
       meanTemp: forecastData.daily.temperature_2m_mean[index],
+      cloudCover: forecastData.daily?.cloud_cover_mean[index],
     };
   });
 
@@ -164,7 +159,7 @@ export default function SearchLocation() {
       {/* five day forecast  */}
       {dailyMeanData && dailyMeanData?.length > 0 && (
         <section className="mt-8 items-center gap-2 text-center">
-          <FiveDayForecast dailyMeanData={dailyMeanData} settings={settings} />
+          <FiveDayForecast dailyMeanData={dailyMeanData} settings={settings} isDay={forecastData?.current?.is_day} />
         </section>
       )}
     </>

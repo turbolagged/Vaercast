@@ -15,7 +15,7 @@ export default function getWeatherCodeDetails(code: number, isDay: number) {
 
   if (!entry) return fallbackResponses();
 
-  return isDay ? entry.day : entry.night;
+  return (isDay ? entry.day : entry.night) ?? fallbackResponses();
 }
 
 function fallbackResponses() {
