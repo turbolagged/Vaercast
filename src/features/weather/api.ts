@@ -9,7 +9,7 @@ export const forecastUrl = (
   temperatureUnit = "celsius",
   windUnit = "kmh",
 ) =>
-  `${FORECAST_URL}?temperature_unit=${temperatureUnit}&timezone=${timezone}&latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,is_day,weather_code,cloud_cover,precipitation,wind_direction_10m,pressure_msl,uv_index&daily=temperature_2m_mean,cloud_cover_mean&forecast_days=5&wind_speed_unit=${windUnit}`;
+  `${FORECAST_URL}?temperature_unit=${temperatureUnit}&timezone=${timezone}&latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,is_day,weather_code,cloud_cover,precipitation,wind_direction_10m,pressure_msl,uv_index&daily=temperature_2m_mean,weather_code&forecast_days=5&wind_speed_unit=${windUnit}`;
 
 export const fetcher = (url: string) => {
   return fetch(url).then((response) => {

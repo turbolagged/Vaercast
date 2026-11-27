@@ -15,7 +15,7 @@ import FiveDayForecast from "./Five-day-forecast";
 export type ForecastDay = {
   date: string;
   meanTemp: number;
-  couldCover: number;
+  weatherCode: number;
 };
 
 function getSearchResults(location: string) {
@@ -55,7 +55,7 @@ export default function SearchLocation() {
     return {
       date: day,
       meanTemp: forecastData.daily.temperature_2m_mean[index],
-      cloudCover: forecastData.daily?.cloud_cover_mean[index],
+      weatherCode: forecastData.daily?.weather_code[index],
     };
   });
 
