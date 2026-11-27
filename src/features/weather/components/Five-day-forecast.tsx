@@ -7,7 +7,7 @@ type FiveDayForecastProp = {
   isDay: number;
 };
 
-export default function FiveDayForecast({ dailyMeanData, settings, isDay }: FiveDayForecastProp) {
+export default function FiveDayForecast({ dailyMeanData, isDay }: FiveDayForecastProp) {
   // const tempUnit = settings.temperatureUnit === "celsius" ? "℃" : "℉";
 
   return (
